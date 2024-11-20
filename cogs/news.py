@@ -20,12 +20,12 @@ class NewsCog(discord.ext.commands.Cog):
     async def news_latest(self, interaction: discord.Interaction):
         link = "https://cse.ntou.edu.tw/p/403-1063-1034-1.php?Lang=zh-tw"
         response = self.beautiful_soup(link)
-        news = response.find("div", class_ = "row listBS")
+        news = response.find("div", class_="row listBS")
         title = news.find("a")["title"]
-        date = news.find("i", class_ = "mdate after").get_text()
+        date = news.find("i", class_="mdate after").get_text()
         link = news.find("a")["href"]
         response = self.beautiful_soup(link)
-        content = response.find("div", class_ = "mpgdetail").get_text()
+        content = response.find("div", class_="mpgdetail").get_text()
         embed = discord.Embed(
             title=title,
             url=link,
@@ -34,7 +34,7 @@ class NewsCog(discord.ext.commands.Cog):
         )
         embed.add_field(name=":calendar_spiral: 日期", value=date, inline=False)
         embed.add_field(name=":placard: 內容", value=content.strip(), inline=False)
-        embed.set_footer(text="國立海洋大學資訊工程學系消息")
+        embed.set_footer(text="NTOU Goblin Engineer 製作")
         await interaction.response.send_message(embed=embed)
 
 class NewsTask(discord.ext.commands.Cog):
@@ -51,23 +51,23 @@ class NewsTask(discord.ext.commands.Cog):
         soup = BeautifulSoup(html.text, "html.parser")
         return soup
 
-    @discord.ext.tasks.loop(minutes=1)
+    @discord.ext.tasks.loop(time=everyday_time)
     async def news_update(self):
         with open("news.json", "r", encoding="utf8") as file:
             news_data = json.load(file)
         s = set(news_data)
         link = "https://cse.ntou.edu.tw/p/403-1063-1034-1.php?Lang=zh-tw"
         response = self.beautiful_soup(link)
-        news_list = response.find_all("div", class_ = "row listBS")
+        news_list = response.find_all("div", class_="row listBS")
         news_list.reverse()
         for news in news_list:
             title = news.find("a")["title"]
-            date = news.find("i", class_ = "mdate after").get_text()
+            date = news.find("i", class_="mdate after").get_text()
             link = news.find("a")["href"]
             if title not in s:
                 s.add(title)
                 response = self.beautiful_soup(link)
-                content = response.find("div", class_ = "mpgdetail").get_text()
+                content = response.find("div", class_="mpgdetail").get_text()
                 if len(content) > 1000:
                     content = content[:1000] + "......"
                 embed = discord.Embed(
@@ -78,7 +78,7 @@ class NewsTask(discord.ext.commands.Cog):
                 )
                 embed.add_field(name=":calendar_spiral: 日期", value=date, inline=False)
                 embed.add_field(name=":placard: 內容", value=content.strip(), inline=False)
-                embed.set_footer(text="國立海洋大學資訊工程學系消息")
+                embed.set_footer(text="NTOU Goblin Engineer 製作")
                 await self.bot.get_channel(int(self.channel_id)).send(embed=embed)
             await asyncio.sleep(3)
         with open("news.json", "w", encoding="utf8") as file:

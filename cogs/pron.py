@@ -26,15 +26,15 @@ class MissAVCog(discord.ext.commands.Cog):
             colour=discord.Colour.pink(),
             timestamp=datetime.datetime.now()
         )
-        embed.set_footer(text="Miss AV 資訊系統")
-        rank = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", "nine", ":keycap_ten:"]
+        embed.set_footer(text="NTOU Goblin Engineer 製作")
+        rank = [":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", ":keycap_ten:"]
         av_list = soup.find_all("div", class_="thumbnail group")
         for i in range(10):
             img = av_list[i].find("img", class_="w-full")["data-src"]
             a_tag = av_list[i].find("a", class_="text-secondary group-hover:text-primary")
             link = f"https://missav.com/{a_tag['alt']}"
             number, title = a_tag.get_text().strip().split(" ", 1)
-            embed.add_field(name=f"{rank[i]} {number} {title}", value=f"{link}", inline=False)
+            embed.add_field(name=f"{rank[i]} 【{number}】", value=f"[{title}]({link})", inline=False)
         driver.quit()
         await interaction.followup.send(embed=embed)
 
