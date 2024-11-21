@@ -16,8 +16,8 @@ class NewsCog(discord.ext.commands.Cog):
         soup = BeautifulSoup(html.text, "html.parser")
         return soup
 
-    @discord.app_commands.command(name="news_latest", description="最新消息")
-    async def news_latest(self, interaction: discord.Interaction):
+    @discord.app_commands.command(name="ntou_cse_news_latest", description="海大資工最新消息")
+    async def ntou_cse_news_latest(self, interaction: discord.Interaction):
         link = "https://cse.ntou.edu.tw/p/403-1063-1034-1.php?Lang=zh-tw"
         response = self.beautiful_soup(link)
         news = response.find("div", class_="row listBS")
